@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles de {{ room.name }}</title>
+    <style>
+        /* Estilos para consistencia visual */
+        body { font-family: sans-serif; margin: 2em; max-width: 800px; margin-left: auto; margin-right: auto; }
+        h1, h2 { color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { background-color: #f4f4f4; border: 1px solid #ddd; margin-bottom: 10px; padding: 15px; border-radius: 4px; }
+        hr { border: none; border-top: 1px solid #eee; margin: 2em 0; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        form p { margin-bottom: 1em; }
+        form label { display: block; margin-bottom: 0.5em; font-weight: bold; }
+        form input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        .error-message { color: #D8000C; background-color: #FFD2D2; border: 1px solid #D8000C; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>{{ room.name }}</h1>
+    <p><strong>Capacidad:</strong> {{ room.capacity }} personas</p>
+    <hr>
+
+    <h2>Próximas Reservaciones</h2>
+    <ul>
+        {% for reservation in reservations %}
+            <li style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>Organizador:</strong> {{ reservation.organizer_name }} <br>
+                    <strong>Inicio:</strong> {{ reservation.start_time|date:"d/m/Y H:i" }} <br>
+                    <strong>Fin:</strong> {{ reservation.end_time|date:"d/m/Y H:i" }}
+                </div>
+
+                <form action="{% url 'delete_reservation' reservation.id %}" method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit"
+                        onclick="return confirm('¿Estás seguro de que quieres liberar esta sala? La reservación se cancelará permanentemente.');"
+                        style="background-color: #dc3545; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer;">
+                    Liberar
+                    </button>
+                </form>
+                </li>
+        {% empty %}
+            <li>No hay reservaciones próximas para esta sala.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Hacer una Nueva Reservación</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Reservar</button>
+    </form>
+    <br>
+    <p><a href="{% url 'room_list' %}">Volver a la lista de salas</a></p>
+</body>
+</html>

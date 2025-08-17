@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Salas de Juntas</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { background-color: #f4f4f4; border: 1px solid #ddd; margin-bottom: 10px; padding: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Salas de Juntas Disponibles</h1>
+
+    <p><a href="{% url 'create_room' %}">Añadir Nueva Sala</a></p>
+
+    <ul>
+        {% for room in rooms %}
+            <li>
+                <strong>Nombre:</strong> <a href="{% url 'room_detail' room.id %}">{{ room.name }}</a> <br>
+                <strong>Capacidad:</strong> {{ room.capacity }} personas
+            </li>
+        {% empty %}
+            <li>No hay salas de juntas registradas todavía.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
