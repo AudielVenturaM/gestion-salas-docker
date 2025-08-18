@@ -48,7 +48,7 @@ Una aplicación web full-stack para la administración y reservación de salas d
 
 \* \*\*Base de Datos:\*\* PostgreSQL
 
-\* \*\*Servidor Web (Frontend):\*\* Nginx
+\* \*\*Servidor Web (Frontend):\*\* Nginx (configurado como Reverse Proxy)
 
 \* \*\*Containerización:\*\* Docker, Docker Compose
 
@@ -82,11 +82,11 @@ Para ejecutar este proyecto, necesitas tener instalado:
 
 
 
-Sigue estos pasos para poner en marcha el proyecto en tu máquina local:
+Gracias a la configuración de Docker Compose, levantar el proyecto es un proceso de un solo comando.
 
 
 
-1\.  \*\*Clona el repositorio\*\* (si estuviera en GitHub):
+1\.  \*\*Clona el repositorio\*\*:
 
 &nbsp;   ```bash
 
@@ -114,11 +114,12 @@ Sigue estos pasos para poner en marcha el proyecto en tu máquina local:
 
 
 
-3\.  \*\*Ejecuta las migraciones de la base de datos:\*\*
+3\.  \*\*Prepara la base de datos (en una segunda terminal):\*\*
 
-&nbsp;   \*Abre una \*\*segunda terminal\*\* en la misma carpeta\* y ejecuta:
+&nbsp;   Mientras la aplicación está corriendo, abre **otra terminal** en la misma carpeta y ejecuta los siguientes comandos para configurar la base de datos por primera vez:
 
 &nbsp;   ```bash
+&nbsp;	# Crear las tablas en la base de datos
 
 &nbsp;   docker-compose exec backend python manage.py migrate
 
@@ -143,6 +144,14 @@ Sigue estos pasos para poner en marcha el proyecto en tu máquina local:
 &nbsp;   \* \*\*Backend (Admin de Django):\*\* `http://localhost:8000/admin/`
 
 
+
+---
+
+---
+
+### Cómo Detener la Aplicación
+
+Para detener todos los contenedores, simplemente presiona `Ctrl + C` en la terminal donde ejecutaste `docker-compose up`.
 
 ---
 
