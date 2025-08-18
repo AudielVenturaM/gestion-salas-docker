@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   backend:
@@ -8,10 +7,20 @@ services:
       - "8000:8000"
     volumes:
       - ./gestion_salas:/app
+    # Aquí definimos todas las variables de entorno que Django necesita.
+    # Docker se las pasará directamente al contenedor al iniciar.
     env_file:
-      - ./gestion_salas/.env # Le dice a Docker que cargue las variables de nuestro archivo .env
-    environment:
-      - DB_HOST=db # Sobrescribe el DB_HOST para que sea 'db' en lugar de 'localhost'
+      - SECRET_KEY=una-llave-secreta-muy-segura-para-desarrollo-no-usar-en-produccion
+      - DEBUG=True
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db  # El host es 'db' para la comunicación entre contenedores.
+      - DB_PORT=5432
+      # - ./gestion_salas/.env # Le dice a Docker que cargue las variables de nuestro archivo .env
+    # environment:
+      # - DB_HOST=db # Sobrescribe el DB_HOST para que sea 'db' en lugar de 'localhost'
     depends_on:
       - db
 
@@ -19,7 +28,9 @@ services:
     build: ./frontend-gestion-salas
     ports:
       - "5173:80"
-
+    # Asegura que el backend se inicie antes, para que la API esté disponible
+    depends_on:
+      - backend
   db:
     image: postgres:16
     environment:

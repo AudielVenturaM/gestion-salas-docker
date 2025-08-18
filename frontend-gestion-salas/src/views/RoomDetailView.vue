@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import api from '@/api';
 
 const route = useRoute();
 const router = useRouter();
@@ -14,8 +14,8 @@ const fetchData = async () => {
   try {
     const roomId = route.params.id;
     const [roomRes, reservationsRes] = await Promise.all([
-      axios.get(`http://localhost:8000/api/rooms/${roomId}/`),
-      axios.get(`http://localhost:8000/api/rooms/${roomId}/reservations/`)
+      api.get(`/rooms/${roomId}/`),
+      api.get(`/rooms/${roomId}/reservations/`)
     ]);
     room.value = roomRes.data;
     reservations.value = reservationsRes.data;
@@ -29,7 +29,7 @@ const handleReservationSubmit = async () => {
   errorMessage.value = '';
   try {
     const roomId = route.params.id;
-    await axios.post(`http://localhost:8000/api/rooms/${roomId}/reservations/`, newReservation.value);
+    await api.post(`/rooms/${roomId}/reservations/`, newReservation.value);
     newReservation.value = { organizer_name: '', start_time: '', end_time: '' };
     await fetchData();
   } catch (error) {
@@ -40,7 +40,7 @@ const handleReservationSubmit = async () => {
 const deleteReservation = async (reservationId) => {
   if (confirm('¿Estás seguro de que quieres liberar esta sala?')) {
     try {
-      await axios.delete(`http://localhost:8000/api/reservations/${reservationId}/delete/`);
+      await api.delete(`/reservations/${reservationId}/delete/`);
       await fetchData();
     } catch (error) {
       errorMessage.value = 'No se pudo eliminar la reservación.';

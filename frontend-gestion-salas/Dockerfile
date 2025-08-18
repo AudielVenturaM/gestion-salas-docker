@@ -24,6 +24,9 @@ FROM nginx:stable-alpine as production-stage
 # Copiamos los archivos construidos de la etapa anterior
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
+# Definimos las reglas de Nginx
+COPY nginx.conf etc/nginx/conf.d/default.conf
+
 # Exponemos el puerto 80, que es el puerto por defecto de Nginx
 EXPOSE 80
 
