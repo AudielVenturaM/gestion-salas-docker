@@ -9,7 +9,7 @@ services:
       - ./gestion_salas:/app
     # Aquí definimos todas las variables de entorno que Django necesita.
     # Docker se las pasará directamente al contenedor al iniciar.
-    env_file:
+    environment:
       - SECRET_KEY=una-llave-secreta-muy-segura-para-desarrollo-no-usar-en-produccion
       - DEBUG=True
       - DB_ENGINE=django.db.backends.postgresql
