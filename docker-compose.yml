@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./gestion_salas
+    command: python manage.py runserver 0.0.0.0:8000 # Cambiamos a runserver para ver los logs de Django
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./gestion_salas:/app
+    env_file:
+      - ./gestion_salas/.env # Le dice a Docker que cargue las variables de nuestro archivo .env
+    environment:
+      - DB_HOST=db # Sobrescribe el DB_HOST para que sea 'db' en lugar de 'localhost'
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend-gestion-salas
+    ports:
+      - "5173:80"
+
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
