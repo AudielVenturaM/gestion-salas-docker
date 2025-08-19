@@ -87,6 +87,13 @@ def reservation_list_api(request, room_id):
             start_time = validated_data['start_time']
             end_time = validated_data['end_time']
 
+            # Regla de negocio: La hora de fin debe ser posterior a la de inicio.
+            if end_time <= start_time:
+                return Response(
+                    {'error': 'La hora de fin debe ser posterior a la hora de inicio.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             # Validar que no se solape
             overlapping = Reservation.objects.filter(
                 room=room,
