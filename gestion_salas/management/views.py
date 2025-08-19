@@ -1,12 +1,14 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.utils import timezone
 from datetime import timedelta
 from .models import MeetingRoom, Reservation
 from .serializers import MeetingRoomSerializer, ReservationSerializer
+from rest_framework.permissions import AllowAny
 
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def room_list_api(request):
     """
     Endpoint de API para listar todas las salas o crear una nueva.
@@ -54,6 +56,7 @@ def room_detail_api(request, room_id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def reservation_list_api(request, room_id):
     """
     Endpoint para listar las reservaciones de una sala o crear una nueva.
@@ -99,6 +102,7 @@ def reservation_list_api(request, room_id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([AllowAny])
 def reservation_delete_api(request, reservation_id):
     """
     Endpoint para eliminar una reservación.
